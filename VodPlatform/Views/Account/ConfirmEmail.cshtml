@@ -1,0 +1,23 @@
+﻿@section Styles {
+    <link rel="stylesheet" href="~/css/account.css" />
+}
+
+@{
+    ViewData["Title"] = "Email confirm";
+}
+
+<div class="container-account">
+
+    <form id="confirmemail" method="post" asp-action="ConfirmedEmail" asp-controller="Account">
+        <input type="hidden" name="code" value="@(ViewBag.Code)" />
+        <input type="hidden" name="Email" value="@(ViewBag.Email)" />
+
+        <p>
+            To confirm your email address, please click the button below.
+            If you did not register on our site, please contact the administrator.
+        </p>
+
+        <button type="submit">Confirm Email Address</button>
+    </form>
+
+</div>

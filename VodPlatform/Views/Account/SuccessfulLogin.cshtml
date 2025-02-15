@@ -1,0 +1,17 @@
+﻿@section Styles {
+    <link rel="stylesheet" href="~/css/account.css" />
+}
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container-account">
+
+    <h1>Welcome!</h1>
+
+    <p>Login was successful. We're glad to have you with us.</p>
+
+    <p>You can now go to the <a href="@Url.Action("MyAccount", "Home")">manage account</a></p>
+
+</div>

@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div id="home" style="text-align: center; padding: 20px;">
+
+    <h1>Welcome to VodPlatform!</h1>
+
+    <p>VodPlatform is your ultimate destination for streaming the best movies, series, and exclusive content anytime, anywhere.</p>
+
+    <p>With VodPlatform, you can:</p>
+    <ul style="list-style: none; text-align: left; display: inline-block;">
+        <li>✔ Enjoy a vast library of high-quality movies and series.</li>
+        <li>✔ Watch on multiple devices with seamless streaming.</li>
+        <li>✔ Create your own watchlist and get personalized recommendations.</li>
+    </ul>
+
+    <p>Join VodPlatform today and dive into the world of entertainment!</p>
+
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <div id="account-actions">
+            <a class="btn btn-primary" href="@Url.Action("Login", "Account")">Login</a>
+            <a class="btn btn-primary" href="@Url.Action("Register", "Account")">Register</a>
+        </div>
+    }
+</div>

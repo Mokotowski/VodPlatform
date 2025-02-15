@@ -1,0 +1,15 @@
+﻿@section Styles {
+    <link rel="stylesheet" href="~/css/account.css" />
+}
+
+@{
+    ViewData["Title"] = "Error Login";
+}
+
+
+<div class="container-account">
+    <h1>Login Failed</h1>
+    <p>The provided username or password is incorrect. Please try again.</p>
+    <p>If you forgot your password, you can reset it <a href="@Url.Action("ForgotPassword", "Account")"> here </a></p>
+    <p>Redirect to the login page <a href="@Url.Action("Login", "Account")"> here </a></p>
+</div>

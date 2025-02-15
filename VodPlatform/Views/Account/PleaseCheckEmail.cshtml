@@ -1,0 +1,32 @@
+﻿@section Styles {
+    <link rel="stylesheet" href="~/css/account.css" />
+}
+
+@{
+    ViewData["Title"] = "Registration confirmation";
+}
+
+
+<div class="container-account">
+
+    <h2>Registration Confirmation</h2>
+
+    <p>Thank you for registering!</p>
+
+    <p>
+        To complete the registration process, please check your email inbox and click the confirmation link.
+    </p>
+
+    <p>
+        We sent to your email address: <strong>@(ViewBag.Email)</strong>.
+    </p>
+
+    <p>
+        If you did not receive the email, please check your spam folder or
+        <a href="@Url.Action("ResendConfirmationEmail", "Account", new { Email = ViewBag.Email })">
+            resend the message
+        </a>
+
+    </p
+
+</div>

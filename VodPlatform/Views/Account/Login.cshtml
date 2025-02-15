@@ -1,0 +1,30 @@
+﻿@section Styles {
+    <link rel="stylesheet" href="~/css/account.css" />
+}
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+
+<div class="account-actions">
+    <div class="account-form">
+        <form id="account-form-build" method="post" asp-action="SimpleLogin" asp-controller="Account" onsubmit="return validateForm()">
+
+            <label for="Nick">Username:</label>
+            <input type="text" name="Nick" required placeholder="Enter Username" />
+            <small id="nickError" style="color: red; display: none;">Please enter a valid username.</small>
+
+            <label for="Password">Password:</label>
+            <input type="password" name="Password" id="Password" required minlength="8" placeholder="Enter Password" />
+
+            <a href="@Url.Action("ForgotPassword","Account")" style="color: lightblue; text-decoration: none;">Forgot Password</a>
+
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</div>
+
+
+
+
