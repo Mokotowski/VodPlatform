@@ -1,0 +1,97 @@
+﻿@{
+    ViewData["Title"] = "Manage Users";
+    var userRole = ViewBag.UserRole as string ?? "User";
+}
+
+<h2>Manage Users</h2>
+
+<input type="text" id="searchBox" placeholder="Search user..." />
+
+<table id="usersTable" border="1">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+        let userRole = "@userRole";
+
+        function loadUsers(searchTerm = '') {
+            $.ajax({
+                url: '/AdminPanel/GetUsers',
+                type: 'GET',
+                data: { searchTerm: searchTerm },
+                success: function (users) {
+                    console.log("Received data:", users);
+                    let tableContent = '';
+                    if (users.length === 0) {
+                        tableContent = `<tr><td colspan="4">No results.</td></tr>`;
+                    } else {
+                        users.forEach(user => {
+                            let buttons = '';
+
+                            if (userRole === "SuperAdmin") {
+                                buttons += `
+                                    <button onclick="modifyRole('${user.id}', 'Admin', true)">Add Admin</button>
+                                    <button onclick="modifyRole('${user.id}', 'Moderator', true)">Add Moderator</button>
+                                    <button onclick="modifyRole('${user.id}', 'Admin', false)">Remove Admin</button>
+                                    <button onclick="modifyRole('${user.id}', 'Moderator', false)">Remove Moderator</button>
+                                `;
+                            } else if (userRole === "Admin") {
+                                buttons += `
+                                    <button onclick="modifyRole('${user.id}', 'Moderator', true)">Add Moderator</button>
+                                    <button onclick="modifyRole('${user.id}', 'Moderator', false)">Remove Moderator</button>
+                                `;
+                            }
+
+                            tableContent += `
+                                <tr>
+                                    <td>${user.firstname ?? 'N/A'}</td>
+                                    <td>${user.lastname ?? 'N/A'}</td>
+                                    <td>${user.email}</td>
+                                    <td>${buttons}</td>
+                                </tr>`;
+                        });
+                    }
+                    $('#usersTable tbody').html(tableContent);
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", status, error);
+                    alert('An error occurred while fetching users.');
+                }
+            });
+        }
+
+        $('#searchBox').on('input', function () {
+            loadUsers($(this).val());
+        });
+
+        window.modifyRole = function (userId, role, add) {
+            $.ajax({
+                url: add ? '/AdminPanel/AddPermission' : '/AdminPanel/RemovePermission',
+                type: 'POST',
+                data: { userId: userId, role: role },
+                success: function (response) {
+                    if (response.success) {
+                        alert(`${add ? 'Added' : 'Removed'} role ${role}`);
+                        loadUsers($('#searchBox').val());
+                    } else {
+                        alert('The operation failed.');
+                    }
+                },
+                error: function () {
+                    alert('An error occurred while changing the role.');
+                }
+            });
+        };
+
+        loadUsers();
+    });
+</script>

@@ -1,0 +1,24 @@
+﻿@model List<string>
+@{
+    ViewData["Title"] = "Movie List";
+}
+
+<h1>Movie List</h1>
+
+@if (Model != null && Model.Any())
+{
+    <ul>
+        @foreach (var movie in Model)
+        {
+            <li>
+                <a href="@Url.Action("WatchMovie", "VideoPlayer", new { movieName = movie })">
+                    @movie
+                </a>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No available movies.</p>
+}

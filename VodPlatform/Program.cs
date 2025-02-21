@@ -3,14 +3,23 @@ using VodPlatform.Database;
 using VodPlatform.Services.Interface;
 using VodPlatform.Services;
 using Microsoft.AspNetCore.Identity;
+using VodPlatform.Models;
+using VodPlatform.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader());
+});
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -54,22 +63,43 @@ builder.Services.AddScoped<ILogin, AccountAuthenticationServies>();
 
 builder.Services.AddScoped<ISendEmail, EmailActionsServies>();
 builder.Services.AddScoped<IFunctionsFromEmail, EmailActionsServies>();
+builder.Services.AddScoped<ILibraryActions, LibraryServices>();
+builder.Services.AddScoped<ILibraryData, LibraryServices>();
+
+builder.Services.AddScoped<IPermissionService, PermissionService>();
+builder.Services.AddScoped<RoleManager<IdentityRole>>();
+
+builder.Services.AddScoped<IPlaylistPermissionServices, PlaylistPermissionServices>();
+
+
+builder.Services.AddScoped<VideoServices>();
+
 
 
 var app = builder.Build();
 
 
-// Configure the HTTP request pipeline.
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UserModel>>();
+
+    await SeedData.Initialize(scope.ServiceProvider, roleManager, userManager);
+}
+
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseCors("AllowAll");
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();

@@ -1,0 +1,28 @@
+﻿@section Styles {
+    <link rel="stylesheet" href="~/css/videoplayer.css" />
+}
+
+@{
+    ViewBag.Title = ViewBag.Movie;
+}
+
+<div class="video-container">
+    <video id="player" controls crossorigin playsinline>
+        <source src="@Url.Action("Stream", "VideoPlayer", new { movieName = ViewBag.Movie, file = "output.mpd" })" type="application/dash+xml">
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const player = new Plyr('#player', {
+                controls: [
+                    'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'captions', 'settings', 'fullscreen'
+                ],
+                settings: ['captions', 'speed'],
+                i18n: { speed: 'Speed' }
+            });
+        });
+    </script>
+}

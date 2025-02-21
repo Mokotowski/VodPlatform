@@ -1,0 +1,261 @@
+﻿@{
+    ViewBag.Title = "Manage Library";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/managelibrary.css" />
+}
+
+<h2>Manage Library</h2>
+
+<div class="row">
+    <div class="form-container">
+        <h3>Add New Series</h3>
+        <form asp-action="AddSeries" method="post">
+            <div class="form-group">
+                <label for="SeriesTitle">Series Title</label>
+                <input type="text" id="SeriesTitle" name="Title" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Add Series</button>
+        </form>
+    </div>
+
+    <div class="form-container">
+        <h3>Add New Movie</h3>
+        <form asp-action="AddMovie" method="post">
+            <div class="form-group">
+                <label for="MovieTitle">Title</label>
+                <input type="text" id="MovieTitle" name="Title" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label for="MovieType">Type</label>
+                <select id="MovieType" name="Type" class="form-control" required>
+                    <option value="Series">Series</option>
+                    <option value="Movie">Movie</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="MovieCategory">Category</label>
+                <select id="MovieCategory" name="Category" class="form-control" required>
+                    <option value="Action">Action</option>
+                    <option value="Adventure">Adventure</option>
+                    <option value="Sci-Fi">Sci-Fi</option>
+                    <option value="Fantasy">Fantasy</option>
+                    <option value="Horror">Horror</option>
+                    <option value="Thriller">Thriller</option>
+                    <option value="Crime">Crime</option>
+                    <option value="Drama">Drama</option>
+                    <option value="Romance">Romance</option>
+                    <option value="Comedy">Comedy</option>
+                    <option value="Animation">Animation</option>
+                    <option value="Family">Family</option>
+                    <option value="War">War</option>
+                    <option value="Historical">Historical</option>
+                    <option value="Biographical">Biographical</option>
+                    <option value="Documentary">Documentary</option>
+                    <option value="Musical">Musical</option>
+                    <option value="Sports">Sports</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="SeriesSelectMovie">Series</label>
+                <select id="SeriesSelectMovie" name="Id_Series" class="form-control" required>
+                    @foreach (var series in ViewBag.Series)
+                    {
+                        <option value="@series.Id">@series.Title</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="SeriesSearch">Search Series</label>
+                <input type="text" id="SeriesSearch" class="form-control" placeholder="Search series..." />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Add Movie</button>
+        </form>
+    </div>
+
+
+
+
+    <div class="form-container">
+        <h3>Add New Series</h3>
+        <form asp-action="AddSerial" method="post">
+            <div class="form-group">
+                <label for="SeriesTitle">Series Title</label>
+                <input type="text" id="SeriesTitle" name="Title" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label for="MovieCategory">Category</label>
+                <select id="MovieCategory" name="Category" class="form-control" required>
+                    <option value="Action">Action</option>
+                    <option value="Adventure">Adventure</option>
+                    <option value="Sci-Fi">Sci-Fi</option>
+                    <option value="Fantasy">Fantasy</option>
+                    <option value="Horror">Horror</option>
+                    <option value="Thriller">Thriller</option>
+                    <option value="Crime">Crime</option>
+                    <option value="Drama">Drama</option>
+                    <option value="Romance">Romance</option>
+                    <option value="Comedy">Comedy</option>
+                    <option value="Animation">Animation</option>
+                    <option value="Family">Family</option>
+                    <option value="War">War</option>
+                    <option value="Historical">Historical</option>
+                    <option value="Biographical">Biographical</option>
+                    <option value="Documentary">Documentary</option>
+                    <option value="Musical">Musical</option>
+                    <option value="Sports">Sports</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="SeriesSelect">Series</label>
+                <select id="SeriesSelect" name="Id_Series" class="form-control" required>
+                    @foreach (var series in ViewBag.Series)
+                    {
+                        <option value="@series.Id">@series.Title</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="Seasons">Number of Seasons</label>
+                <input type="number" id="Seasons" name="Seasons" class="form-control" min="1" required onchange="generateEpisodeFields()" />
+            </div>
+
+            <div id="episodesContainer"></div>
+
+            <button type="submit" class="btn btn-primary">Add Series</button>
+        </form>
+    </div>
+</div>
+
+
+
+<hr />
+
+<div class="full-width-form">
+    <h3>Associate Movies with Series</h3>
+    <form asp-action="MovieAssociation" method="post">
+        <div class="form-group">
+            <label for="MovieAssociationSeriesSelect">Select Series</label>
+            <select id="MovieAssociationSeriesSelect" name="Id_Series" class="form-control" required onchange="movieAssociationUpdateSelection()">
+                @foreach (var series in ViewBag.Series as List<VodPlatform.Database.Series>)
+                {
+                    <option value="@series.Id">@series.Title</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="MovieAssociationSearch">Search Movies</label>
+            <input type="text" id="MovieAssociationSearch" class="form-control" placeholder="Search by title..." onkeyup="movieAssociationFilterMovies()" />
+        </div>
+
+        <div class="form-group">
+            <label>Select Movies</label>
+            <div id="MovieAssociationMovieList" class="movie-checkboxes">
+                @foreach (var movie in ViewBag.Movies as List<VodPlatform.Database.Movie>)
+                {
+                    <div class="form-check movie-item-movie-association" data-title="@movie.Title.ToLower()" data-series-id="@movie.Id_Series">
+                        <input type="checkbox" class="form-check-input movie-checkbox-movie-association" name="Id_Movie" value="@movie.Id" />
+                        <label class="form-check-label">@movie.Title</label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Associate Movies</button>
+    </form>
+</div>
+
+@section Scripts {
+
+    <script>
+
+        function movieAssociationUpdateSelection() {
+            var selectedSeriesId = document.getElementById("MovieAssociationSeriesSelect").value;
+            var checkboxes = document.querySelectorAll(".movie-checkbox-movie-association");
+
+            checkboxes.forEach(function (checkbox) {
+                var movieItem = checkbox.closest(".movie-item-movie-association");
+                var movieSeriesId = movieItem.getAttribute("data-series-id");
+
+                checkbox.checked = movieSeriesId === selectedSeriesId;
+            });
+        }
+
+        function movieAssociationFilterMovies() {
+            var searchText = document.getElementById("MovieAssociationSearch").value.toLowerCase();
+            var movieItems = document.querySelectorAll(".movie-item-movie-association");
+
+            movieItems.forEach(function (item) {
+                var title = item.getAttribute("data-title");
+                item.style.display = title.includes(searchText) ? "block" : "none";
+            });
+        }
+
+
+        function updateMovieSelection() {
+            var selectedSeriesId = document.getElementById("SeriesSelect").value;
+            var checkboxes = document.querySelectorAll(".movie-checkbox");
+
+            checkboxes.forEach(function (checkbox) {
+                var movieItem = checkbox.closest(".movie-item");
+                var movieSeriesId = movieItem.getAttribute("data-series-id");
+
+                checkbox.checked = movieSeriesId === selectedSeriesId;
+            });
+        }
+
+        function generateEpisodeFields() {
+            const seasons = document.getElementById('Seasons').value;
+            const episodesContainer = document.getElementById('episodesContainer');
+            episodesContainer.innerHTML = "";
+            for (let i = 1; i <= seasons; i++) {
+                const seasonDiv = document.createElement('div');
+                seasonDiv.classList.add('form-group');
+
+                const label = document.createElement('label');
+                label.textContent = `Number of Episodes in Season ${i}`;
+                seasonDiv.appendChild(label);
+
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.name = `Episodes[${i - 1}]`;
+                input.classList.add('form-control');
+                input.min = 1;
+                seasonDiv.appendChild(input);
+
+                episodesContainer.appendChild(seasonDiv);
+            }
+        }
+
+        function filterMovies() {
+            var searchText = document.getElementById("MovieSearch").value.toLowerCase();
+            var movieItems = document.querySelectorAll(".movie-item");
+
+            movieItems.forEach(function (item) {
+                var title = item.getAttribute("data-title");
+                item.style.display = title.includes(searchText) ? "block" : "none";
+            });
+        }
+
+        document.getElementById("SeriesSearch").addEventListener("input", function () {
+            let searchValue = this.value.toLowerCase();
+            let options = document.getElementById("SeriesSelectMovie").options;
+
+            for (let i = 1; i < options.length; i++) {
+                let text = options[i].text.toLowerCase();
+                options[i].style.display = text.includes(searchValue) ? "" : "none";
+            }
+        });
+
+    </script>
+}

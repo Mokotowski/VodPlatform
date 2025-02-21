@@ -114,12 +114,12 @@ namespace VodPlatform.Services
                 </head>
                 <body>
                     <div class='container'>
-                        <h1>Welcome to Creators!</h1>
+                        <h1>Welcome to VodPlatform!</h1>
                         <p>Thank you for creating an account. To complete the registration process, please confirm your email address by clicking the button below.</p>
                         <p><a href='{HtmlEncoder.Default.Encode(callbackUrl)}' class='button'>Confirm Your Email</a></p>
                         <p>If you did not create an account on our site, you may ignore this message.</p>
                         <div class='footer'>
-                            <p>&copy; 2024 Creators. All rights reserved.</p>
+                            <p>&copy; 2024 VodPlatform. All rights reserved.</p>
                         </div>
                     </div>
                 </body>
@@ -262,7 +262,7 @@ namespace VodPlatform.Services
                             <p><a href='{HtmlEncoder.Default.Encode(callbackUrl)}' class='button'>Reset Password</a></p>
                             <p>If you did not initiate this request, please ignore this message or contact our support team.</p>
                             <div class='footer'>
-                                <p>&copy; 2024 Creators. All rights reserved.</p>
+                                <p>&copy; 2024 VodPlatform. All rights reserved.</p>
                             </div>
                         </div>
                     </body>

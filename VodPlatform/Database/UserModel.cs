@@ -6,5 +6,8 @@ namespace VodPlatform.Database
     {
         public string? Firstname { get; set; }
         public string? Lastname { get; set; }
+
+        public List<Watched> Watched { get; set; }
+        public List<Watchlist> Watchlist { get; set; }
     }
 }
